@@ -17,6 +17,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         movies = new ArrayList<>();
 
         // Create the adapter
-        MovieAdapter movieAdapter = new MovieAdapter(this,movies);
+        MovieAdapter movieAdapter = new MovieAdapter(this, movies);
 
         // Set the adapter on the recycler view
         rvMovies.setAdapter(movieAdapter);
@@ -70,5 +71,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
     }
 }

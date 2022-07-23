@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="4dp"
@@ -24,6 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="6dp"
         android:layout_toEndOf="@+id/ivPoster"
+        android:textColor="@color/white"
         android:textSize="24sp"
         tools:text="Minions: The Rise of Gru" />
 
@@ -35,5 +37,6 @@
         android:layout_marginStart="4dp"
         android:layout_marginTop="4dp"
         android:layout_toEndOf="@+id/ivPoster"
+        android:textColor="@color/white"
         tools:text="A fanboy of a supervillain supergroup known as the Vicious 6, Gru hatches a plan to become evil enough to join them, with the backup of his followers, the Minions." />
 </RelativeLayout>
