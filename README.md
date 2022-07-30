@@ -34,7 +34,7 @@ Describe any challenges encountered while building the app.
 
 
 
-## Flix Part 2
+## Flix Part 1
 
 ### User Stories
 
