@@ -1,28 +1,43 @@
 package com.example.flixter.adapters;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.databinding.BindingAdapter;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.example.flixter.DetailActivity;
+import com.example.flixter.MainActivity;
 import com.example.flixter.R;
+import com.example.flixter.databinding.ItemMovie1Binding;
+import com.example.flixter.databinding.ItemMovie2Binding;
 import com.example.flixter.models.Movie;
 
+import org.parceler.Parcels;
 
 import java.util.List;
 
 
 public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-    Context context;
+    public static Context context;
     List<Movie>movies;
+
 
     public MovieAdapter(Context context, List<Movie> movies) {
         this.context = context;
@@ -39,11 +54,11 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
         if (viewType == 1){
-                View v1 = inflater.inflate(R.layout.item_movie1, parent, false);
+                ItemMovie1Binding v1 = DataBindingUtil.inflate(inflater, R.layout.item_movie1, parent, false);
                 viewHolder = new ViewHolder(v1);
         }
         else{
-            View v2 = inflater.inflate(R.layout.item_movie2, parent, false);
+            ItemMovie2Binding v2 = DataBindingUtil.inflate(inflater, R.layout.item_movie2, parent, false);
             viewHolder = new ViewHolder_1(v2);
         }
         return viewHolder;
@@ -72,7 +87,7 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     @Override
     public int getItemViewType(int position){
-        if (movies.get(position).getRating() > 5){
+        if (movies.get(position).getRating() > 7){
             return 0;
         }
         else
@@ -80,48 +95,79 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        TextView tvTitle;
-        TextView tvOverview;
-        ImageView ivPoster;
+        ItemMovie1Binding binding;
 
-        public ViewHolder (@NonNull View itemView) {
-            super(itemView);
-            tvTitle = itemView.findViewById(R.id.tvTitle);
-            tvOverview = itemView.findViewById(R.id.tvOverview);
-            ivPoster = itemView.findViewById(R.id.ivPoster);
+
+        public ViewHolder (@NonNull ItemMovie1Binding bindingView) {
+            super(bindingView.getRoot());
+
+            binding = bindingView;
+
         }
 
     }
     private void configureViewHolder(ViewHolder V1, int position){
         Movie movie = movies.get(position);
 
-        V1.tvTitle.setText(movie.getTitle());
-        V1.tvOverview.setText(movie.getOverview());
-        String imageUrl;
-        // if the phone in landscape
-        if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-            // then imageUrl = back drop image
-            imageUrl = movie.getBackdropPath();
-        }
-        else{
-            // else imageUrl = poster image
-            imageUrl = movie.getPosterPath();
-        }
-        Glide.with(context).load(imageUrl).placeholder(R.drawable.place_hold).into(V1.ivPoster);
+        V1.binding.setMovie(movie);
+
+
+        // 1. Register click listener on the whole row
+        V1.binding.container.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 2. Navigate to a new activity on tap
+                Intent i = new Intent(context, DetailActivity.class);
+                i.putExtra("movie", Parcels.wrap(movie));
+                ActivityOptions options = ActivityOptions.
+                        makeSceneTransitionAnimation((Activity) context, V1.binding.ivPoster, "profile");
+                context.startActivity(i, options.toBundle());
+
+            }
+        });
 
     }
 
     private void configureViewHolder1(ViewHolder_1 V2, int position){
         Movie movie = movies.get(position);
-        Glide.with(context).load(movie.getBackdropPath()).placeholder(R.drawable.place_hold).into(V2.backdropPath);
+        V2.binding.setMovie(movie);
+
+
+        // 1. Register click listener on the whole row
+        V2.binding.container1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 2. Navigate to a new activity on tap
+                Intent i = new Intent(context, DetailActivity.class);
+                i.putExtra("movie", Parcels.wrap(movie));
+                ActivityOptions options = ActivityOptions.
+                        makeSceneTransitionAnimation((Activity) context, V2.binding.ivPoster2,"profile");
+                context.startActivity(i, options.toBundle());
+
+            }
+        });
+
     }
 
     public class ViewHolder_1 extends RecyclerView.ViewHolder{
-        ImageView backdropPath;
 
-        public ViewHolder_1 (@NonNull View itemView) {
-            super(itemView);
-            backdropPath = itemView.findViewById(R.id.ivPoster2);
+        ItemMovie2Binding binding;
+
+        public ViewHolder_1 (@NonNull ItemMovie2Binding bindingView) {
+            super(bindingView.getRoot());
+
+            binding = bindingView;
+        }
+    }
+
+    public static class BindingAdapterUtils{
+        @BindingAdapter({"imageUrl1"})
+        public static void loadImage1(ImageView view, String url) {
+         Glide.with(context).load(url).transform(new RoundedCorners(100)).placeholder(R.drawable.place_hold).into(view);
+        }
+        @BindingAdapter({"imageUrl"})
+        public static void loadImage(ImageView view, String url) {
+            Glide.with(context).load(url).transform(new RoundedCorners(100)).placeholder(R.drawable.place_hold).into(view);
         }
     }
     }

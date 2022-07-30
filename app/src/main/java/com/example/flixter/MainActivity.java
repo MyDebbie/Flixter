@@ -1,6 +1,7 @@
 package com.example.flixter;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -10,6 +11,7 @@ import android.util.Log;
 import com.codepath.asynchttpclient.AsyncHttpClient;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.flixter.adapters.MovieAdapter;
+import com.example.flixter.databinding.ActivityMainBinding;
 import com.example.flixter.models.Movie;
 import com.facebook.stetho.common.ArrayListAccumulator;
 
@@ -27,15 +29,17 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String Now_Playing_URL = "https://api.themoviedb.org/3/movie/now_playing?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed";
     public static final String TAG = "MainActivity";
-
+    public ActivityMainBinding binding = null;
     List<Movie> movies;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        RecyclerView rvMovies = findViewById(R.id.rvMovies);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        //setContentView(R.layout.activity_main);
+        RecyclerView rvMovies = binding.rvMovies;
+        //RecyclerView rvMovies = findViewById(R.id.rvMovies);
         movies = new ArrayList<>();
 
         // Create the adapter
